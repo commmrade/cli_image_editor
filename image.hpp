@@ -33,12 +33,13 @@ public:
     Image(const char *path);
     Image(uint width, uint height);
 
-    Mat getImage() const {return img.clone();};
+    Mat& getImage() {return img;};
 
     void flip_horizontally();
     void flip_vertically();
     void blur(int strength);
     void scale_down(int scale);
+    Image cut(int height_from, int height_to, int width_from, int width_to);
 
 
 

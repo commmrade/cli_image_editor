@@ -7,7 +7,7 @@ Image::Image(const char *path) {
 
 Image::Image(uint width, uint height)
 {
-    img = Mat::zeros(Size(height, width), CV_8UC3);
+    img = Mat::zeros(Size(height, width), CV_8UC3); //Default init image
 }
 
 Mat Image::flip_img_h(Mat img_f)
@@ -108,7 +108,7 @@ Mat Image::blur_img(Mat imgf, int blur_str)
             //blurred_img.at<Vec3b>(j, i) = Vec3b(0, 0, 0);
         }
     }
-    for(auto i = width - 1; i >= 0; --i)
+    for(auto i = width - 1; i >= 0; --i) 
     {
         for(auto j = height - 1; j >= height - blur_strength; --j)
         {
@@ -167,4 +167,17 @@ void Image::blur(int strength)
 void Image::scale_down(int scale)
 {
     img = scaleD_img(img, scale);
+}
+Image Image::cut(int height_from, int height_to, int width_from, int width_to)
+{
+    Image res(height_to - height_from, width_to - width_from);
+
+    for(auto i : std::views::iota(0, height_to - height_from))
+    {
+        for(auto j : std::views::iota(0, width_to - width_from))
+        {
+            res.getImage().at<Vec3b>(i, j) = img.at<Vec3b>(i + height_from, j + width_from);
+        }
+    }
+    return res;
 }

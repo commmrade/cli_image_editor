@@ -1,3 +1,4 @@
+#include <exception>
 #include <iostream>
 #include<opencv2/core.hpp>
 //#include<opencv4/opencv2/opencv.hpp>
@@ -9,6 +10,7 @@
 #include <opencv2/imgproc.hpp>
 #include<opencv2/opencv.hpp>
 #include<ranges>
+
 #include<format>
 #include "image.hpp"
 #include<opencv2/imgcodecs.hpp>
@@ -17,7 +19,7 @@ using namespace cv;
 
 void error_send()
 {
-    std::cout << "Please use ./app path_to_img <fliph, flipv, scale, blur> <multiplier (if scale, blur)>\n";
+    std::cout << "Please use ./app path_to_img\n";
 }
 
 int main(int argc, char** argv){
@@ -26,40 +28,78 @@ int main(int argc, char** argv){
         error_send();
         return -1;
     }
-     
-    //std::cout << argv[1] << std::endl;
-    std::string action = argv[2];
-    //Mat img = imread(argv[1]);
+
     Image img(argv[1]);
-    std::cout << img.getImage().rows << std::endl;
-    if(action == "fliph") {
-        std::cout << "flipping...\n";
-        //img = flip_img_h(img);
+
+    printf("Please enter an action (fliph, flipv, blur, scale, imgres, cut, exit): ");
+
+    std::string action;
+    std::cin >> action;
+
+    if (action == "fliph")
+    {
+        printf("Flipping...\n");
         img.flip_horizontally();
     }
-    else if (action == "flipv") {
-        std::cout << "flipping...\n";
-        //img = flip_img_v(img);
+    else if (action == "flipv")
+    {
+        printf("Flipping...\n");
         img.flip_vertically();
     }
-    else if(action == "scale") {
-        std::cout << std::format("scaling down by {}", atoi(argv[3])) << std::endl;
+    else if (action == "scale")
+    {
+        uint scale;
+        printf("Enter scale (2 means 2 times smaller): ");
+        std::cin >> scale;
+        printf("Processing...");
+        img.scale_down(scale);
+    }
+    else if (action == "blur")
+    {
+        int scale;
+        printf("Enter blur radius (0+): ");
+        std::cin >> scale;
         
-        //img = scaleD_img(img, atoi(argv[3]));
-        img.scale_down(atoi(argv[3]));
+        if(scale < 0) {
+            return -1;
+        }
+        printf("Processing...");
+        
+        
+        img.blur(scale);
     }
-    else if (action == "blur"){
-        std::cout << std::format("blurring by {}", atoi(argv[3])) << std::endl;
-        //img = blur_img(img, atoi(argv[3]));
-        img.blur(atoi(argv[3]));
+    else if (action == "imgres")
+    {
+        std::cout << "Height: " << img.getImage().rows << "\nWidth: " << img.getImage().cols << std::endl;
     }
-    else {
-        error_send();
-        return -1;
+    else if (action == "cut")
+    {
+        printf("To cut an image from the source you need to enter from which Height, Width and to Height, Width you want to cut\n");
+        int height_from;
+        int height_to;
+        int width_from;
+        int width_to;
+
+        printf("Enter start Height: ");
+        std::cin >> height_from;
+        printf("Enter end Height: ");
+        std::cin >> height_to;
+
+        printf("Enter start Width: ");
+        std::cin >> width_from;
+        printf("Enter end Width: ");
+        std::cin >> width_to;
+
+        img = img.cut(height_from, height_to, width_from, width_to);
+
+
+    }
+    else
+    {
+        std::cout << "Exiting..." << std::endl;
     }
     
-
-
+    
 
     imwrite("output.jpg", img.getImage());
     
