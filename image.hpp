@@ -27,7 +27,7 @@ private:
     Mat flip_img_v(Mat img_f);
     Mat blur_img(Mat imgf, int blur_str);
     Mat scaleD_img(Mat imgf, int sFactor);
-
+    Mat rotate_img();
 public:
 
     Image(const char *path);
@@ -40,6 +40,7 @@ public:
     void blur(int strength);
     void scale_down(int scale);
     Image cut(int height_from, int height_to, int width_from, int width_to);
+    void rotate();
 
 
 

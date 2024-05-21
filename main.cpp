@@ -31,7 +31,7 @@ int main(int argc, char** argv){
 
     Image img(argv[1]);
 
-    printf("Please enter an action (fliph, flipv, blur, scale, imgres, cut, exit): ");
+    printf("Please enter an action (fliph, flipv, blur, scale, imgres, cut, rotate, exit): ");
 
     std::string action;
     std::cin >> action;
@@ -94,12 +94,17 @@ int main(int argc, char** argv){
 
 
     }
+    else if (action == "rotate")
+    {
+        printf("Rotating...");
+        img.rotate();
+    }
     else
     {
         std::cout << "Exiting..." << std::endl;
     }
     
-    
+    //img = img.rotate();
 
     imwrite("output.jpg", img.getImage());
     

@@ -1,4 +1,5 @@
 #include "image.hpp"
+#include <opencv2/core/hal/interface.h>
 #include <opencv2/core/matx.hpp>
 
 Image::Image(const char *path) {
@@ -152,6 +153,30 @@ Mat Image::scaleD_img(Mat imgf, int sFactor)
 
     return img;
 }
+Mat Image::rotate_img()
+{
+    Mat res(Size(img.rows, img.cols), CV_8UC3);
+
+
+    for(auto i : std::views::iota(0, res.rows))
+    {
+        for(auto j : std::views::iota(0, res.cols))
+        {
+            res.at<Vec3b>(i, j) = img.at<Vec3b>(j, i); 
+        }
+    }
+
+    res = flip_img_v(res); //Without this the image is rotated clockwise
+
+
+    return res;
+}
+
+
+
+
+
+
 void Image::flip_horizontally()
 {
     img = flip_img_h(img);
@@ -168,6 +193,10 @@ void Image::scale_down(int scale)
 {
     img = scaleD_img(img, scale);
 }
+void Image::rotate()
+{
+    img = rotate_img();
+}
 Image Image::cut(int height_from, int height_to, int width_from, int width_to)
 {
     Image res(height_to - height_from, width_to - width_from);
@@ -181,3 +210,4 @@ Image Image::cut(int height_from, int height_to, int width_from, int width_to)
     }
     return res;
 }
+
