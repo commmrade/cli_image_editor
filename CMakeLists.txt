@@ -7,7 +7,7 @@ set (CMAKE_CXX_STANDARD 20)
 
 
 
-add_executable(proj main.cpp image.cpp)
+add_executable(proj main.cpp image.cpp command.cpp)
 
 
 find_package (OpenCV 4.0.0 REQUIRED)

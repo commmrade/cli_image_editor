@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include<opencv2/core.hpp>
@@ -84,6 +85,7 @@ int main(int argc, char** argv){
         
         case ImageResolution:
             std::cout << "Height: " << img.getImage().rows << "\nWidth: " << img.getImage().cols << std::endl;
+            exit(EXIT_SUCCESS);
             break;
         
         case Cut:
