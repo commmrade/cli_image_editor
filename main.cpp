@@ -22,7 +22,21 @@ void error_send()
     std::cout << "Please use ./app path_to_img.jpg\n";
 }
 
+void foo(Mat img)
+{
+    for(auto i : std::views::iota(0, img.rows))
+    {
+        for(auto j : std::views::iota(0, img.cols))
+        {
+            img.at<Vec3b>(i, j) = Vec3b(0, 0, 0);
+        }
+    }
+}
+
+
 int main(int argc, char** argv){
+
+
 
     if(argc < 2) {
         error_send();
@@ -107,6 +121,8 @@ int main(int argc, char** argv){
     //img = img.rotate();
 
     imwrite("output.jpg", img.getImage());
+
+ 
     
     
 

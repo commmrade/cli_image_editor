@@ -61,7 +61,7 @@ Mat Image::flip_img_v(Mat img_f)
 
 Mat Image::blur_img(Mat imgf, int blur_str)
 {
-    Mat blurred_img = imgf.clone();
+    Mat blurred_img = imgf.clone(); // so we wo nt change original image
 
     int width = blurred_img.cols;
     int height = blurred_img.rows;
@@ -90,7 +90,7 @@ Mat Image::blur_img(Mat imgf, int blur_str)
                 }
 
 
-                blurred_img.at<Vec3b>(j, i) = sum / (blur_strength * blur_strength); //Dividing to get average
+                blurred_img.at<Vec3b>(j, i) = sum / (blur_strength * blur_strength); //Dividing by pixels amount to get average
             }
         }
     });
@@ -127,7 +127,7 @@ Mat Image::blur_img(Mat imgf, int blur_str)
                     sum += imgf.at<Vec3b>(j - k, i - l); //Averaging colors in range 5x5 for example
                 }
             }
-            blurred_img.at<Vec3b>(j, i) = sum / (blur_strength * blur_strength);
+            blurred_img.at<Vec3b>(j, i) = sum / (blur_strength * blur_strength); //Dividing by pixels amount to get average
             //blurred_img.at<Vec3b>(j, i) = Vec3b(0, 0, 0);
         }
     }
@@ -137,14 +137,11 @@ Mat Image::blur_img(Mat imgf, int blur_str)
 Mat Image::scaleD_img(Mat imgf, int sFactor)
 {
     
-
-    int scale_factor = sFactor;
-
     int width = imgf.cols;
     int height = imgf.rows;
 
-    int new_wd = width / scale_factor; //Scaled down resolution
-    int new_ht = height / scale_factor; 
+    int new_wd = width / sFactor; //Scaled down resolution
+    int new_ht = height / sFactor; 
 
     Mat img(new_ht, new_wd, imgf.type());
 
@@ -152,7 +149,7 @@ Mat Image::scaleD_img(Mat imgf, int sFactor)
     {
         for(auto j = 0; j < new_ht; ++j)
         {
-            img.at<Vec3b>(j, i) = imgf.at<Vec3b>(j * scale_factor, i * scale_factor); // Multiplying width and height to correspond to the original image
+            img.at<Vec3b>(j, i) = imgf.at<Vec3b>(j * sFactor, i * sFactor); // Multiplying width and height to correspond to the original image
         }
     }
 
@@ -176,6 +173,20 @@ Mat Image::rotate_img()
 
     return res;
 }
+Mat Image::cut_img(int height_from, int height_to, int width_from, int width_to)
+{
+    Mat res(Size(width_to - width_from, height_to - height_from), CV_8UC3);
+
+    for(auto i : std::views::iota(0, height_to - height_from))
+    {
+        for(auto j : std::views::iota(0, width_to - width_from))
+        {
+            res.at<Vec3b>(i, j) = img.at<Vec3b>(i + height_from, j + width_from);
+        }
+    }
+    return res;
+}
+
 
 
 
@@ -201,19 +212,6 @@ void Image::scale_down(int scale)
 void Image::rotate()
 {
     img = rotate_img();
-}
-Mat Image::cut_img(int height_from, int height_to, int width_from, int width_to)
-{
-    Mat res(Size(width_to - width_from, height_to - height_from), CV_8UC3);
-
-    for(auto i : std::views::iota(0, height_to - height_from))
-    {
-        for(auto j : std::views::iota(0, width_to - width_from))
-        {
-            res.at<Vec3b>(i, j) = img.at<Vec3b>(i + height_from, j + width_from);
-        }
-    }
-    return res;
 }
 void Image::cut(int height_from, int height_to, int width_from, int width_to)
 {
