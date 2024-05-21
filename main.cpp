@@ -19,7 +19,7 @@ using namespace cv;
 
 void error_send()
 {
-    std::cout << "Please use ./app path_to_img\n";
+    std::cout << "Please use ./app path_to_img.jpg\n";
 }
 
 int main(int argc, char** argv){
@@ -90,7 +90,7 @@ int main(int argc, char** argv){
         printf("Enter end Width: ");
         std::cin >> width_to;
 
-        img = img.cut(height_from, height_to, width_from, width_to);
+        img.cut(height_from, height_to, width_from, width_to);
 
 
     }

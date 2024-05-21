@@ -1,9 +1,14 @@
 #include "image.hpp"
+#include <cstdlib>
 #include <opencv2/core/hal/interface.h>
 #include <opencv2/core/matx.hpp>
 
 Image::Image(const char *path) {
     img = imread(path);
+    if(img.data == NULL)
+    {
+        exit(EXIT_FAILURE); // If file doesnt exist or sommething else hapenned
+    }
 }
 
 Image::Image(uint width, uint height)
@@ -155,7 +160,7 @@ Mat Image::scaleD_img(Mat imgf, int sFactor)
 }
 Mat Image::rotate_img()
 {
-    Mat res(Size(img.rows, img.cols), CV_8UC3);
+    Mat res(Size(img.rows, img.cols), CV_8UC3); //Using width as height and height as width
 
 
     for(auto i : std::views::iota(0, res.rows))
@@ -197,17 +202,21 @@ void Image::rotate()
 {
     img = rotate_img();
 }
-Image Image::cut(int height_from, int height_to, int width_from, int width_to)
+Mat Image::cut_img(int height_from, int height_to, int width_from, int width_to)
 {
-    Image res(height_to - height_from, width_to - width_from);
+    Mat res(Size(width_to - width_from, height_to - height_from), CV_8UC3);
 
     for(auto i : std::views::iota(0, height_to - height_from))
     {
         for(auto j : std::views::iota(0, width_to - width_from))
         {
-            res.getImage().at<Vec3b>(i, j) = img.at<Vec3b>(i + height_from, j + width_from);
+            res.at<Vec3b>(i, j) = img.at<Vec3b>(i + height_from, j + width_from);
         }
     }
     return res;
+}
+void Image::cut(int height_from, int height_to, int width_from, int width_to)
+{
+    img = cut_img(height_from, height_to, width_from, width_to);
 }
 
