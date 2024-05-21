@@ -95,42 +95,24 @@ Mat Image::blur_img(Mat imgf, int blur_str)
         }
     });
 
-
-    //Handling border pixels
-    for(auto i = width - 1; i >= width - blur_strength; --i)
-    {
-        for(auto j = height - 1; j >= 0; --j)
-        {
-            auto sum = Vec3i(0, 0, 0);
-            for(auto k : std::views::iota(0, blur_strength))
-            {
-                //for(int l = 0; l < blur_strength; ++l)
-                for(auto l : std::views::iota(0, blur_strength))
-                {
-                    sum += imgf.at<Vec3b>(j - k, i - l); //Averaging colors in range 5x5 for example
-                }
-            }
-            blurred_img.at<Vec3b>(j, i) = sum / (blur_strength * blur_strength);
-            //blurred_img.at<Vec3b>(j, i) = Vec3b(0, 0, 0);
-        }
-    }
-    for(auto i = width - 1; i >= 0; --i) 
-    {
-        for(auto j = height - 1; j >= height - blur_strength; --j)
-        {
-            auto sum = Vec3i(0, 0, 0);
-            for(auto k : std::views::iota(0, blur_strength))
-            {
-                //for(int l = 0; l < blur_strength; ++l)
-                for(auto l : std::views::iota(0, blur_strength))
-                {
-                    sum += imgf.at<Vec3b>(j - k, i - l); //Averaging colors in range 5x5 for example
-                }
-            }
-            blurred_img.at<Vec3b>(j, i) = sum / (blur_strength * blur_strength); //Dividing by pixels amount to get average
-            //blurred_img.at<Vec3b>(j, i) = Vec3b(0, 0, 0);
-        }
-    }
+    // TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
+    //     TODO:
+    //     FIX BORDERS
 
     return blurred_img;
 }

@@ -10,7 +10,7 @@
 #include <opencv2/imgproc.hpp>
 #include<opencv2/opencv.hpp>
 #include<ranges>
-
+#include"command.hpp"
 #include<format>
 #include "image.hpp"
 #include<opencv2/imgcodecs.hpp>
@@ -45,78 +45,79 @@ int main(int argc, char** argv){
 
     Image img(argv[1]);
 
-    printf("Please enter an action (fliph, flipv, blur, scale, imgres, cut, rotate, exit): ");
+    Action action = Commands::Parse();
 
-    std::string action;
-    std::cin >> action;
+    //printf("Please enter an action (fliph, flipv, blur, scale, imgres, cut, rotate, exit): ");
 
-    if (action == "fliph")
+    
+    switch (action)
     {
-        printf("Flipping...\n");
-        img.flip_horizontally();
-    }
-    else if (action == "flipv")
-    {
-        printf("Flipping...\n");
-        img.flip_vertically();
-    }
-    else if (action == "scale")
-    {
-        uint scale;
-        printf("Enter scale (2 means 2 times smaller): ");
-        std::cin >> scale;
-        printf("Processing...");
-        img.scale_down(scale);
-    }
-    else if (action == "blur")
-    {
-        int scale;
-        printf("Enter blur radius (0+): ");
-        std::cin >> scale;
+        case FlipHorizontal:
+            printf("Flipping...\n");
+            img.flip_horizontally(); 
+            break;
+
+        case FlipVertical:
+            printf("Flipping...\n");
+            img.flip_vertically();
+            break;
+
+        case Scale:
+            uint scale;
+            printf("Enter scale (2 means 2 times smaller): ");
+            std::cin >> scale;
+            printf("Processing...");
+            img.scale_down(scale);
+            break;
         
-        if(scale < 0) {
-            return -1;
-        }
-        printf("Processing...");
+        case Blur:
+            int blur_str;
+            printf("Enter blur radius (0+): ");
+            std::cin >> blur_str;
+            
+            if(blur_str < 0) {
+                return -1;
+            }
+            printf("Processing...");
+            img.blur(blur_str);
+            break;
         
+        case ImageResolution:
+            std::cout << "Height: " << img.getImage().rows << "\nWidth: " << img.getImage().cols << std::endl;
+            break;
         
-        img.blur(scale);
-    }
-    else if (action == "imgres")
-    {
-        std::cout << "Height: " << img.getImage().rows << "\nWidth: " << img.getImage().cols << std::endl;
-    }
-    else if (action == "cut")
-    {
-        printf("To cut an image from the source you need to enter from which Height, Width and to Height, Width you want to cut\n");
-        int height_from;
-        int height_to;
-        int width_from;
-        int width_to;
+        case Cut:
+            printf("To cut an image from the source you need to enter from which Height, Width and to Height, Width you want to cut\n");
+            int height_from;
+            int height_to;
+            int width_from;
+            int width_to;
 
-        printf("Enter start Height: ");
-        std::cin >> height_from;
-        printf("Enter end Height: ");
-        std::cin >> height_to;
+            printf("Enter start Height: ");
+            std::cin >> height_from;
+            printf("Enter end Height: ");
+            std::cin >> height_to;
 
-        printf("Enter start Width: ");
-        std::cin >> width_from;
-        printf("Enter end Width: ");
-        std::cin >> width_to;
+            printf("Enter start Width: ");
+            std::cin >> width_from;
+            printf("Enter end Width: ");
+            std::cin >> width_to;
 
-        img.cut(height_from, height_to, width_from, width_to);
-
+            img.cut(height_from, height_to, width_from, width_to);
+            break;
+        
+        case Rotate:
+            printf("Rotating...");
+            img.rotate();
+            break;
+        
+        case Exit:
+            std::cout << "Exiting..." << std::endl;
+            return 0;
+            break;
 
     }
-    else if (action == "rotate")
-    {
-        printf("Rotating...");
-        img.rotate();
-    }
-    else
-    {
-        std::cout << "Exiting..." << std::endl;
-    }
+
     
     //img = img.rotate();
 
