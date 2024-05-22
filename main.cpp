@@ -4,6 +4,7 @@
 #include<ranges>
 #include"command.hpp"
 #include<format>
+#include<print>
 #include "image.hpp"
 #include<opencv2/imgcodecs.hpp>
 using namespace cv;
@@ -12,17 +13,6 @@ using namespace cv;
 void error_send()
 {
     std::cout << "Please use ./app path_to_img.jpg\n";
-}
-
-void foo(Mat img)
-{
-    for(auto i : std::views::iota(0, img.rows))
-    {
-        for(auto j : std::views::iota(0, img.cols))
-        {
-            img.at<Vec3b>(i, j) = Vec3b(0, 0, 0);
-        }
-    }
 }
 
 
@@ -38,10 +28,6 @@ int main(int argc, char** argv){
     Image img(argv[1]);
 
     Action action = Commands::Parse();
-
-    //printf("Please enter an action (fliph, flipv, blur, scale, imgres, cut, rotate, exit): ");
-
-    
     switch (action)
     {
         case FlipHorizontal:
@@ -113,9 +99,9 @@ int main(int argc, char** argv){
 
     
     //img = img.rotate();
-
+    std::print("Writing image..."); 
     imwrite("output.jpg", img.getImage());
-
+    
  
     
     
